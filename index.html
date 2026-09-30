@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Catch the Dot</title>
+	<style>
+		body { margin: 0; font-family: sans-serif; text-align: center; background: #182033; color: white; }
+		h1 { margin: 24px 0 8px; }
+		#score { font-size: 1.2rem; margin-bottom: 12px; }
+		#game { position: relative; margin: auto; width: min(90vw, 600px); height: 400px; background: #263653; border: 3px solid #6ee7b7; border-radius: 12px; overflow: hidden; }
+		#dot { position: absolute; width: 34px; height: 34px; border: 0; border-radius: 50%; background: #fbbf24; cursor: pointer; display: none; box-shadow: 0 0 18px #fbbf24; }
+		button#start { margin-top: 14px; padding: 10px 20px; border: 0; border-radius: 8px; background: #6ee7b7; color: #182033; font-weight: bold; cursor: pointer; }
+	</style>
+</head>
+<body>
+	<h1>Catch the Dot</h1>
+	<div id="score">Score: 0 | Time: 30</div>
+	<div id="game"><button id="dot" aria-label="Catch the dot"></button></div>
+	<button id="start">Start Game</button>
+	<script>
+		const game = document.getElementById('game');
+		const dot = document.getElementById('dot');
+		const scoreText = document.getElementById('score');
+		const start = document.getElementById('start');
+		let score = 0, time = 30, timer;
+
+		function moveDot() {
+			dot.style.left = Math.random() * (game.clientWidth - 34) + 'px';
+			dot.style.top = Math.random() * (game.clientHeight - 34) + 'px';
+		}
+		function update() { scoreText.textContent = `Score: ${score} | Time: ${time}`; }
+		function endGame() {
+			clearInterval(timer);
+			dot.style.display = 'none';
+			start.disabled = false;
+			start.textContent = `Play Again (Score: ${score})`;
+		}
+		start.onclick = () => {
+			score = 0; time = 30; update();
+			start.disabled = true; dot.style.display = 'block'; moveDot();
+			clearInterval(timer);
+			timer = setInterval(() => { time--; update(); if (time <= 0) endGame(); }, 1000);
+		};
+		dot.onclick = () => { score++; update(); moveDot(); };
+	</script>
+</body>
+</html>
